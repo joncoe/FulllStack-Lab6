@@ -37,3 +37,21 @@ from . import views, models
 def list_all_users():
     result_set = db.session.query(models.User).all()
     return jsonify(result_set)
+
+
+@app.route("/insert", methods=["POST"])
+def insert_user():
+    name = request.form.get("user_name")
+    email = request.form.get("user_email")
+
+    u1 = models.User(email=email, name=name)
+
+    db.session.add(u1)
+
+    # flush before commit
+    db.session.flush()
+    db.session.commit()
+
+    status_message = "Row with a primary 🔑 of " + email + " has been inserted"
+
+    return jsonify({"📋:": status_message})
