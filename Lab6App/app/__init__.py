@@ -2,6 +2,7 @@ import logging
 
 from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
+from flask import Flask, request, jsonify
 
 """
  Logging configuration
@@ -29,4 +30,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.close()
 """
 
-from . import views
+from . import views, models
+
+
+@app.route("/list", methods=["GET"])
+def list_all_users():
+    result_set = db.session.query(models.User).all()
+    return jsonify(result_set)
