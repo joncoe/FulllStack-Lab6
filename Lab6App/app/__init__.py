@@ -76,6 +76,38 @@ def update_user():
     db.session.flush()
     db.session.commit()
 
-    status_message = str(rows_changed) + " rows have been affected/changed"
+    status_message = (
+        "✅ "
+        + str(rows_changed)
+        + " rows have been updated. User 📧 "
+        + email
+        + " has been updated"
+    )
+
+    return jsonify({"📋:": status_message})
+
+
+@app.route("/delete", methods=["POST"])
+def delete_user():
+    email = request.form.get("user_email")
+
+    query = db.session.query(models.User)
+    query = query.filter(models.User.email == email)
+    rows_changed = query.delete(synchronize_session=False)
+
+    print("🥞 Rows changed: ", rows_changed)
+    print("🔎 query", query)
+
+    # flush before commit
+    db.session.flush()
+    db.session.commit()
+
+    status_message = (
+        "🚮 "
+        + str(rows_changed)
+        + " rows have been updated. User 📧 "
+        + email
+        + " has been deleted"
+    )
 
     return jsonify({"📋:": status_message})
